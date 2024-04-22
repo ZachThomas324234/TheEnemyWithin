@@ -21,7 +21,6 @@ public class DoorOpen : MonoBehaviour
         OriginPosition = transform.position;
         TargetPosition = OriginPosition;
         playerMovement = FindAnyObjectByType<PlayerMovement>();
-        Debug.Log("door is closed");
         doorIsOpen = false;
     }
 
@@ -40,14 +39,12 @@ public class DoorOpen : MonoBehaviour
 
     private void TheDoorCloses()
     {
-        Debug.Log("door is closed");
         doorIsOpen = false;
         TargetPosition = OriginPosition;
     }
 
     private void TheDoorOpens()
     {
-        Debug.Log("door is open");
         doorIsOpen = true;
         TargetPosition += OpenPosition;
     }
