@@ -37,23 +37,10 @@ public class Dashing : MonoBehaviour
     public float dashSpeed;
     public float dashSpeedChangeFactor;
 
-
-    public enum MovementState
-    {
-        walking,
-        sprinting,
-        crouching,
-        dashing,
-        air
-    }
-
-
     public bool dashing;
-
 
     private float desiredMoveSpeed;
     private float lastdesiredMoveSpeed;
-    private MovementState lastState;
     private bool keepMomentum;
 
 
@@ -62,51 +49,14 @@ public class Dashing : MonoBehaviour
             //Mode - Dashing
             if (dashing)
             {
-                //state = MovementState.dashing;
+
                 desiredMoveSpeed = dashSpeed;
                 speedChangefactor = dashSpeedChangeFactor;
             }
 
 
-            //Mode - Crouching
-            //else if (Input.GetKey(crouchkey))
-            //{
-                //state = MovementState.crouching;
-                //desiredMoveSpeed = crouchSpeed;
-            //}
-
-
-            //Mode - Sprinting
-            //else if (grounded && Input.GetKey(sprintKey))
-            //{
-                //state = MovementState.sprinting;
-                //desiredMoveSpeed = sprintSpeed;
-            //}
-
-
-            //Mode - Walking
-            //else if (grounded)
-            //{
-                //state = MovementState.walking;
-                //desiredMoveSpeed = walkSpeed;
-            //}
-
-
-            //Mode - Air
-            //else
-            //{
-                //state = MovementState.air;
-
-
-                //if(desiredMoveSpeed < sprintSpeed)
-                    //desiredMoveSpeed = walkSpeed;
-                //else
-                //desiredMoveSpeed = sprintSpeed;
-            //}
-
-
             bool desiredMoveSpeedHasChanged = desiredMoveSpeed != lastdesiredMoveSpeed;
-            if (lastState == MovementState.dashing) keepMomentum = true;
+            //if (lastState == MovementState.dashing) keepMomentum = true;
 
 
             if(desiredMoveSpeedHasChanged)
@@ -239,31 +189,3 @@ public class Dashing : MonoBehaviour
         //cam.DoFov(85f);
     }
 }
-
-
-//bool HoldingShift
-//float DashCharge
-//float DashCooldown
-
-//void Update()
-//{
-    //if(HoldingShift)DashCharge += Time.deltaTime;
-    //else DashCharge -= Time.deltaTime;
-
-   //DashCharge = Math.Clamp (DashCharge, 0, 1);
-
-    //if(DashCooldown > 0 && DashCharge > 0) DashCharge -= Time.deltaTime;
-    ///if (DashCooldown < 0) dashCharge = 0;
-//}
-
-//void OnShift()
-//{
-    //if(context.started)
-    //{
-        //HoldingShift = true;
-    //}
-    //else
-    //{
-        //if (DashCharge> 1)Dash();
-    //}
-//}
