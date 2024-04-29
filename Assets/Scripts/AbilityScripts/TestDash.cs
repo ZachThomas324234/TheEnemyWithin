@@ -19,6 +19,12 @@ public class TestDash : MonoBehaviour
     public float dashForce;
     public float dashUpwardForce;
     public PlayerMovement playerMovement;
+    public Rigidbody rb;
+
+    public AudioSource chargeDashFire;
+    public AudioSource startCharge;
+    public AudioSource chargePowerUp;
+    public AudioSource chargeExplosion;
 
     void Update()
     {
@@ -36,6 +42,9 @@ public class TestDash : MonoBehaviour
       if(context.started)
       {
         holdingShift = true;
+        chargeDashFire.Play();
+        chargePowerUp.Play();
+        //while charging = true, chargepowerup.play();
       }
       else if(context.canceled)
       {
@@ -51,9 +60,43 @@ public class TestDash : MonoBehaviour
     private void Dash()
     {
         Debug.Log("Dashing");
+        startCharge.Play();
+        Dashing = true;
+        if(playerMovement.MovementX == 0 && playerMovement.MovementY == 0 )
+          playerMovement.Movement = playerMovement.CamF;
         playerMovement.rb.AddForce(playerMovement.Movement * dashForce, ForceMode.VelocityChange);
+
         //friction stop
-        //on collision enter stop
+        GetComponent<Collider>().material.dynamicFriction = 0;
+        GetComponent<Collider>().material.staticFriction = 0;
+        playerMovement.MaxSpeed = 30;
         //disable player movement
+        
+        //on collision enter stop
+    }
+
+    public virtual void OnCollisionEnter (Collision collision)
+    {
+      if (Dashing)
+      {
+      if (collision.collider.CompareTag("Enemy"))
+      {
+        Debug.Log("Collision on Enemy");
+        ResetDash();
+        chargeExplosion.Play();
+        chargeDashFire.Stop();
+        //collision.contacts[0].normal
+        //is it at an angle. then wall.
+      }
+      }
+    }
+
+    private void ResetDash()
+    {
+      Dashing = false;
+      Debug.Log("Resetting dash");
+      GetComponent<Collider>().material.dynamicFriction = 0.75f;
+      GetComponent<Collider>().material.staticFriction = 0.75f;
+      playerMovement.MaxSpeed = 10;
     }
 }

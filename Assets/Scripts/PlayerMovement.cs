@@ -20,11 +20,14 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody rb;
     public Transform Camera;
 
+    public TestDash td;
+
 
     void Awake()
     {
         Camera = GameObject.Find("Main Camera").transform;
         rb = GetComponent<Rigidbody>();
+        td = GetComponent<TestDash>();
     }
 
     void FixedUpdate()
@@ -35,6 +38,8 @@ public class PlayerMovement : MonoBehaviour
         CamR.y = 0;
         CamF = CamF.normalized;
         CamR = CamR.normalized;
+
+        if (td.Dashing) return;
 
         Movement = (CamF * MovementY + CamR * MovementX).normalized;
         rb.AddForce(Movement * Speed);
