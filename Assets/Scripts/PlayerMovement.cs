@@ -1,8 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.Callbacks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -43,6 +39,7 @@ public class PlayerMovement : MonoBehaviour
 
         Movement = (CamF * MovementY + CamR * MovementX).normalized;
         rb.AddForce(Movement * Speed);
+        rb.AddForce(rb.velocity * -6f);
 
         LockToMaxSpeed();
     }
