@@ -63,6 +63,7 @@ public class TestDash : MonoBehaviour
         powerDown.Stop();
         targetVignette = 0.2f;
         targetLensDistortion = -0.7f;
+        if (DashCharge >= 1.5) chargeDone.Play();
       }
       else if(context.canceled)
       {
@@ -74,7 +75,6 @@ public class TestDash : MonoBehaviour
         targetLensDistortion = 0;
         if (DashCharge >= 1.5f)
         {
-            chargeDone.Play();
             Dash();
             DashCooldown = 1.5f;
         }
@@ -97,9 +97,10 @@ public class TestDash : MonoBehaviour
         GetComponent<Collider>().material.dynamicFriction = 0;
         GetComponent<Collider>().material.staticFriction = 0;
         playerMovement.MaxSpeed = 30;
-        //disable player movement
         
         //on collision enter stop
+
+        //if dashing, cant crouch
     }
 
     public virtual void OnCollisionEnter (Collision collision)
