@@ -1,4 +1,6 @@
 using System;
+
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
@@ -7,29 +9,48 @@ using UnityEngine.Rendering.Universal;
 public class TestDash : MonoBehaviour
 {
 
+    [Header("States")]
     public bool holdingShift;
     public bool Dashing;
+    public bool enemyInCircle;
+
+    [Header("Properties")]
     [Range(0, 1.5f)]public float DashCharge;
     [Range(0, 1.5f)]public float DashCooldown;
     [Range(0, 0.5f)]public float DashDuration;
-    public Transform orientation;
     public float dashForce;
-    public float dashUpwardForce;
-    public PlayerMovement playerMovement;
-    public Rigidbody rb;
 
-    public AudioSource chargeDashFire, startCharge, chargePowerUp, chargeExplosion, powerDown, chargeDone;
+    [Header("References")]
+    private PlayerMovement playerMovement;
+    private Rigidbody rb;
+    private Volume volume;
+    private Vignette vignette;
+    private LensDistortion lensDistortion;
 
-    //Global Volume
-    public Volume volume;
-    public Vignette vignette;
-    public LensDistortion lensDistortion;
+    [Header("Audio")]
+    public AudioSource chargeDashFire;
+    public AudioSource startCharge;
+    public AudioSource chargePowerUp;
+    public AudioSource chargeExplosion;
+    public AudioSource powerDown;
+    public AudioSource chargeDone;
+    public AudioSource dashWind;
 
-    public float targetLensDistortion;
-    public float blendLensDistortion;
+    private float targetLensDistortion;
+    private float blendLensDistortion;
+    private float targetVignette;
+    private float blendVignette;
 
-    public float targetVignette;
-    public float blendVignette;
+    void Awake()
+    {
+      playerMovement = GetComponent<PlayerMovement>();
+      rb = GetComponent<Rigidbody>();
+      volume = FindAnyObjectByType<Volume>();
+      volume.profile.TryGet (out Vignette v);
+      vignette = v;
+      volume.profile.TryGet (out LensDistortion lD);
+      lensDistortion = lD;
+    }
 
     void Update()
     {
@@ -45,14 +66,6 @@ public class TestDash : MonoBehaviour
         lensDistortion.intensity.value = Mathf.SmoothDamp(lensDistortion.intensity.value, targetLensDistortion, ref blendLensDistortion, 0.5f);
     }
 
-    void Awake()
-    {
-      volume.profile.TryGet (out Vignette v);
-      vignette = v;
-      volume.profile.TryGet (out LensDistortion lD);
-      lensDistortion = lD;
-    }
-
     public void OnShift(InputAction.CallbackContext context)
     {
       if(context.started && !Dashing && DashCooldown <= 0)
@@ -65,8 +78,8 @@ public class TestDash : MonoBehaviour
         //global volume
         targetVignette = 0.2f;
         targetLensDistortion = -0.7f;
-
-        if (DashCharge >= 1.5) chargeDone.Play();
+        
+        //if (readyToGo) powerDown.Play()
       }
       else if(context.canceled)
       {
@@ -74,15 +87,16 @@ public class TestDash : MonoBehaviour
         //audio
         chargeDashFire.Stop();
         chargePowerUp.Stop();
-        powerDown.Play();
+        if(!Dashing)powerDown.Play();
         //global volume
         targetVignette = 0;
         targetLensDistortion = 0;
 
         if (DashCharge >= 1.5f)
         {
-            Dash();
-            DashCooldown = 1.5f;
+          chargeDone.Play();
+          Dash();
+          DashCooldown = 1.5f;
         }
         else DashCharge = 0;
       }
@@ -90,14 +104,18 @@ public class TestDash : MonoBehaviour
 
     private void Dash()
     {
-        Debug.Log("Dashing");
-        startCharge.Play();
         Dashing = true;
+        startCharge.Play();
+        dashWind.Play();
         targetVignette = 0;
         targetLensDistortion = 0;
-        if(playerMovement.MovementX == 0 && playerMovement.MovementY == 0 )
-          playerMovement.Movement = playerMovement.CamF;
+
+        playerMovement.Movement = playerMovement.CamF;
         playerMovement.rb.AddForce(playerMovement.Movement * dashForce, ForceMode.VelocityChange);
+        
+        //if(playerMovement.MovementX == 0 && playerMovement.MovementY == 0 )
+        //playerMovement.Movement = playerMovement.CamF;
+        //playerMovement.rb.AddForce(playerMovement.Movement * dashForce, ForceMode.VelocityChange);
 
         //friction stop
         GetComponent<Collider>().material.dynamicFriction = 0;
@@ -105,10 +123,8 @@ public class TestDash : MonoBehaviour
         playerMovement.MaxSpeed = 30;
         
         //on collision enter stop
-        //slow movement when crouching
         //no charge when cooldown + cant charge if already holding shift = fix this!
         //create circle radius to show AoE around player
-        //damage enemies
         //enemies = hit, effect on them show they are hit + they bounce
     }
 
@@ -118,22 +134,36 @@ public class TestDash : MonoBehaviour
       {
       if (collision.collider.CompareTag("Enemy"))
       {
-        Debug.Log("Collision on Enemy");
         ResetDash();
         chargeExplosion.Play();
         chargeDashFire.Stop();
+        dashWind.Stop();
         //collision.contacts[0].normal
         //is it at an angle. then wall.
+        
       }
       }
     }
-
+    
     private void ResetDash()
     {
       Dashing = false;
-      Debug.Log("Resetting dash");
       GetComponent<Collider>().material.dynamicFriction = 0.75f;
       GetComponent<Collider>().material.staticFriction = 0.75f;
       playerMovement.MaxSpeed = 10;
+
+      Collider[] colliders = Physics.OverlapSphere(transform.position - playerMovement.CamF * 2, 4);
+      DebugPlus.DrawWireSphere(transform.position - playerMovement.CamF * 2, 4).Duration(1);
+
+      foreach(Collider collider in colliders)
+      { 
+        Enemy enemy = collider.gameObject.GetComponentInParent<Enemy>();
+        if (enemy != null)
+        {
+          enemy.GetComponent<Rigidbody>().AddForce((enemy.transform.position - playerMovement.transform.position).normalized * 0.1f + Vector3.up * 0.2f, ForceMode.VelocityChange);
+          Debug.Log(enemy);
+          enemy.TakeDamage(20);
+        }
+      }
     }
 }
