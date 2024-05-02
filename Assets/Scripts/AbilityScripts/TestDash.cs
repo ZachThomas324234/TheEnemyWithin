@@ -55,24 +55,30 @@ public class TestDash : MonoBehaviour
 
     public void OnShift(InputAction.CallbackContext context)
     {
-      if(context.started)
+      if(context.started && !Dashing && DashCooldown <= 0)
       {
         holdingShift = true;
+        //audio
         chargeDashFire.Play();
         chargePowerUp.Play();
         powerDown.Stop();
+        //global volume
         targetVignette = 0.2f;
         targetLensDistortion = -0.7f;
+
         if (DashCharge >= 1.5) chargeDone.Play();
       }
       else if(context.canceled)
       {
+        holdingShift = false;
+        //audio
         chargeDashFire.Stop();
         chargePowerUp.Stop();
         powerDown.Play();
-        holdingShift = false;
+        //global volume
         targetVignette = 0;
         targetLensDistortion = 0;
+
         if (DashCharge >= 1.5f)
         {
             Dash();
@@ -99,8 +105,11 @@ public class TestDash : MonoBehaviour
         playerMovement.MaxSpeed = 30;
         
         //on collision enter stop
-
-        //if dashing, cant crouch
+        //slow movement when crouching
+        //no charge when cooldown + cant charge if already holding shift = fix this!
+        //create circle radius to show AoE around player
+        //damage enemies
+        //enemies = hit, effect on them show they are hit + they bounce
     }
 
     public virtual void OnCollisionEnter (Collision collision)

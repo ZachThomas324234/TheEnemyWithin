@@ -63,7 +63,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Crouch(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && !td.Dashing)
         {
             Debug.Log("Crouched");
             transform.localScale = new Vector3(1, 0.5f, 1);
