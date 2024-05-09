@@ -5,21 +5,28 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public float health;
+    public float enemyHealth;
 
     public float damageCooldown;
+    
+    public Animator enemyDeath;
 
     public void Update()
     {
         damageCooldown = Mathf.Clamp(damageCooldown - Time.deltaTime, 0, math.INFINITY);
 
-        if (health <= 0) Destroy(gameObject);
+        if (enemyHealth <= 0)
+        {
+            enemyDeath.Play("enemyDeath");
+            //Die();
+        }
+        // Destroy(gameObject);
     }
 
     public void TakeDamage(float damage)
     {
         if(damageCooldown > 0) return;
-        health -= damage;
+        enemyHealth -= damage;
         damageCooldown = 0.01f;
     }
 }

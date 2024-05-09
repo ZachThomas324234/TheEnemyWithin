@@ -11,6 +11,7 @@ public class TestDash : MonoBehaviour
 
     [Header("States")]
     public bool holdingShift;
+    public bool chargeDone = false;
     public bool Dashing;
     public bool enemyInCircle;
 
@@ -33,7 +34,7 @@ public class TestDash : MonoBehaviour
     public AudioSource chargePowerUp;
     public AudioSource chargeExplosion;
     public AudioSource powerDown;
-    public AudioSource chargeDone;
+    public AudioSource chargeDoneSFX;
     public AudioSource dashWind;
 
     private float targetLensDistortion;
@@ -56,8 +57,14 @@ public class TestDash : MonoBehaviour
     {
         if(holdingShift && DashCooldown == 0)DashCharge += Time.deltaTime;
         else DashCharge -= Time.deltaTime;
-
+        
         DashCharge = Math.Clamp (DashCharge, 0, 1.5f);
+
+        if (DashCharge == 1.5f && DashCooldown == 0 && !chargeDone)
+        {
+          chargeDone = true;
+          chargeDoneSFX.Play();
+        }
 
         if(DashCooldown > 0) DashCooldown -= Time.deltaTime;
         if (DashCooldown < 0) DashCooldown = 0;
@@ -94,7 +101,6 @@ public class TestDash : MonoBehaviour
 
         if (DashCharge >= 1.5f)
         {
-          chargeDone.Play();
           Dash();
           DashCooldown = 1.5f;
         }
@@ -130,24 +136,23 @@ public class TestDash : MonoBehaviour
 
     public virtual void OnCollisionEnter (Collision collision)
     {
+      
       if (Dashing)
       {
-      if (collision.collider.CompareTag("Enemy"))
-      {
-        ResetDash();
-        chargeExplosion.Play();
-        chargeDashFire.Stop();
-        dashWind.Stop();
-        //collision.contacts[0].normal
-        //is it at an angle. then wall.
-        
-      }
+        if(Math.Abs(collision.contacts[0].normal.x) > 0.5f || Math.Abs(collision.contacts[0].normal.z) > 0.5f)
+        {
+          ResetDash();
+            chargeExplosion.Play();
+            chargeDashFire.Stop();
+            dashWind.Stop();
+        }
       }
     }
     
     private void ResetDash()
     {
       Dashing = false;
+      chargeDone = false;
       GetComponent<Collider>().material.dynamicFriction = 0.75f;
       GetComponent<Collider>().material.staticFriction = 0.75f;
       playerMovement.MaxSpeed = 10;
@@ -161,8 +166,7 @@ public class TestDash : MonoBehaviour
         if (enemy != null)
         {
           enemy.GetComponent<Rigidbody>().AddForce((enemy.transform.position - playerMovement.transform.position).normalized * 0.1f + Vector3.up * 0.2f, ForceMode.VelocityChange);
-          Debug.Log(enemy);
-          enemy.TakeDamage(20);
+          enemy.TakeDamage(60);
         }
       }
     }

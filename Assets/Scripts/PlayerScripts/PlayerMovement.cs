@@ -1,4 +1,5 @@
 using System;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
     [Header("Properties")]
     public float Speed;
     public float MaxSpeed = 12;
+    [Range(0, 2f)]public float staminaAmount = 0;
+    [Range(0, 2f)]public float staminaCooldown = 0;
     [HideInInspector]public Vector3 CamF;
     [HideInInspector]public Vector3 CamR;
     [HideInInspector]public Vector3 Movement;
@@ -19,13 +22,59 @@ public class PlayerMovement : MonoBehaviour
 
     public TestDash td;
 
+    public bool crouching;
+    public bool isRunning;
+    public bool cantRun;
+
 
     void Awake()
     {
         Camera = GameObject.Find("Main Camera").transform;
         rb = GetComponent<Rigidbody>();
         td = GetComponent<TestDash>();
+        staminaAmount = 2;
     }
+
+    //public void Update()
+    //{
+    //    staminaAmount = Math.Clamp (staminaAmount, 0, 2f);
+    //    staminaCooldown = Math.Clamp (staminaCooldown, 0 , 2f);
+//
+    //    if (!isRunning)
+    //    {
+    //        staminaAmount += Time.deltaTime;
+    //    }
+    //    else
+    //    {
+    //        staminaAmount -= Time.deltaTime;
+    //    }
+    //    
+    //    if (staminaAmount <= 0)
+    //    {
+    //        cantRun = true;
+    //        //make this happen even if the player is pressing the current key.
+    //        staminaCooldown += Time.deltaTime;
+    //    }
+//
+    //    if (staminaCooldown >= 2)
+    //    {
+    //        cantRun = false;
+    //    }
+//
+    //    if (staminaCooldown >= 0)
+    //    {
+    //        staminaAmount = 0;
+    //    }
+//
+    //    //if (staminaAmount == 2f && DashCooldown == 0 && !chargeDone)
+    //    //{
+    //    //  chargeDone = true;
+    //    //  chargeDoneSFX.Play();
+    //    //}
+//
+    //    //if(DashCooldown > 0) DashCooldown -= Time.deltaTime;
+    //    //if (DashCooldown < 0) DashCooldown = 0;
+    //}
 
     void FixedUpdate()
     {
@@ -52,6 +101,20 @@ public class PlayerMovement : MonoBehaviour
         MovementY = inputVector.y;
     }
 
+    public void Run(InputAction.CallbackContext run)
+    {
+        if(run.started && !td.Dashing && !crouching && !cantRun)
+        {
+            isRunning = true;
+            Speed = 300;
+        }
+        if(run.canceled && !td.Dashing && !crouching)
+        {
+            isRunning = false;
+            Speed = 70;
+        }
+    }
+
     public void LockToMaxSpeed()
     {
         // Get the velocity direction
@@ -66,6 +129,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (context.started && !td.Dashing && td.DashCooldown <= 0)
         {
+            crouching = true;
             transform.localScale = new Vector3(1, 0.5f, 1);
             //transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
             Speed = 20;
@@ -73,9 +137,22 @@ public class PlayerMovement : MonoBehaviour
 
         if (context.canceled && !td.Dashing && td.DashCooldown <= 0)
         {
+            crouching = false;
             transform.localScale = new Vector3(1, 1, 1);
             //transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
             Speed = 70;
         }
     }
+
+    //public virtual void OnCollisionEnter (Collision collision)
+    //{
+    //    if(Collider.collision, CompareTag(Enemy))
+    //    {
+    //      ResetDash();
+    //        chargeExplosion.Play();
+    //        chargeDashFire.Stop();
+    //        dashWind.Stop();
+    //    }
+    //  }
+
 }
