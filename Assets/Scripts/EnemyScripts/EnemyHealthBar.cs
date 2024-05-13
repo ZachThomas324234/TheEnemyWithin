@@ -26,10 +26,10 @@ public class EnemyHealthBar : MonoBehaviour
             enemyHealthSlider.value = enemy.enemyHealth;
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            takeDamage(10);
-        }
+        //if (Input.GetKeyDown(KeyCode.R))
+        //{
+        //    takeDamage(10);
+        //}
 
         if (enemyHealthSlider.value != enemyEaseHealthSlider.value)
         {

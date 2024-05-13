@@ -11,13 +11,18 @@ public class Enemy : MonoBehaviour
     
     public Animator enemyDeath;
 
+    private Rigidbody rb;
+
     public void Update()
     {
         damageCooldown = Mathf.Clamp(damageCooldown - Time.deltaTime, 0, math.INFINITY);
 
         if (enemyHealth <= 0)
         {
+            //rb = GetComponent<Rigidbody>();
+            //rb.freezeRotation = false;
             enemyDeath.Play("enemyDeath");
+            Destroy(gameObject, 1f);
             //Die();
         }
         // Destroy(gameObject);
