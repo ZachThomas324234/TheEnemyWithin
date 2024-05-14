@@ -75,7 +75,7 @@ public class TestDash : MonoBehaviour
 
     public void OnShift(InputAction.CallbackContext context)
     {
-      if(context.started && !Dashing && DashCooldown <= 0)
+      if(context.started && !Dashing && DashCooldown <= 0 && playerMovement.hasDash)
       {
         holdingShift = true;
         //audio
@@ -85,10 +85,8 @@ public class TestDash : MonoBehaviour
         //global volume
         targetVignette = 0.2f;
         targetLensDistortion = -0.7f;
-        
-        //if (readyToGo) powerDown.Play()
       }
-      else if(context.canceled)
+      else if(context.canceled && playerMovement.hasDash)
       {
         holdingShift = false;
         //audio

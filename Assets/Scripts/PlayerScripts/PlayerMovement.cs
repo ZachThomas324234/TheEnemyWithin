@@ -21,7 +21,9 @@ public class PlayerMovement : MonoBehaviour
     public Transform Camera;
 
     public TestDash td;
+    public gunScript gs;
 
+    public bool hasDash = false;
     public bool crouching;
     public bool isRunning;
     public bool cantRun;
@@ -32,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
         Camera = GameObject.Find("Main Camera").transform;
         rb = GetComponent<Rigidbody>();
         td = GetComponent<TestDash>();
+        gs = GetComponent<gunScript>();
         staminaAmount = 2;
     }
 
@@ -117,7 +120,6 @@ public class PlayerMovement : MonoBehaviour
 
     public void LockToMaxSpeed()
     {
-        // Get the velocity direction
         Vector3 newVelocity = rb.velocity;
         newVelocity.y = 0f;
         newVelocity = Vector3.ClampMagnitude(newVelocity, MaxSpeed);
@@ -129,30 +131,20 @@ public class PlayerMovement : MonoBehaviour
     {
         if (context.started && !td.Dashing && td.DashCooldown <= 0)
         {
+            gs.ableToShoot = false;
+            gs.gunPutAway.Play("gunPutAway");
             crouching = true;
             transform.localScale = new Vector3(1, 0.5f, 1);
-            //transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
             Speed = 20;
         }
 
         if (context.canceled && !td.Dashing && td.DashCooldown <= 0)
         {
+            gs.ableToShoot = true;
+            gs.gunBringBack.Play("gunBringBack");
             crouching = false;
             transform.localScale = new Vector3(1, 1, 1);
-            //transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
             Speed = 70;
         }
     }
-
-    //public virtual void OnCollisionEnter (Collision collision)
-    //{
-    //    if(Collider.collision, CompareTag(Enemy))
-    //    {
-    //      ResetDash();
-    //        chargeExplosion.Play();
-    //        chargeDashFire.Stop();
-    //        dashWind.Stop();
-    //    }
-    //  }
-
 }

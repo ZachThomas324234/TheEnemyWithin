@@ -5,7 +5,7 @@ using UnityEngine.Rendering;
 using TMPro;
 using System;
 
-public class RadioactiveNuke : MonoBehaviour
+public class gunScript : MonoBehaviour
 {
 
     //time inbetween shots
@@ -13,20 +13,21 @@ public class RadioactiveNuke : MonoBehaviour
     //press left click with no bullets reloads
     #region variables
     public float bulletSpeed;
-    public float nukeForce;
     
     public float magazineSize, bulletsPerTap, bulletsLeft;
 
-    public bool reloadActive, gunReloading, isShooting;
+    public bool reloadActive, gunReloading, isShooting, ableToShoot;
 
     public float timeBetweenShots;
 
     public Transform FirePosition;
     public GameObject BulletPrefab;
     private PlayerMovement player;
+    private TestDash td;
     public TextMeshProUGUI ammunitionDisplay;
     public AudioSource reloading;
-    public Animator gunReload;
+    public AudioSource gunShot;
+    public Animator gunReload, gunPutAway, gunBringBack;
     #endregion
 
     void Awake()
@@ -34,9 +35,11 @@ public class RadioactiveNuke : MonoBehaviour
         timeBetweenShots = 1;
         reloadActive = false;
         gunReloading = false;
+        ableToShoot = true;
         magazineSize = 10;
         bulletsLeft = magazineSize;
         player = FindAnyObjectByType<PlayerMovement>();
+        td = GetComponent<TestDash>();
     }
 
     void Update()
@@ -56,38 +59,39 @@ public class RadioactiveNuke : MonoBehaviour
         //    timeBetweenShots -= Time.deltaTime;
         //}
 
-        if (Input.GetMouseButtonDown(0) && magazineSize >= 1 && !gunReloading)
+        if (Input.GetMouseButtonDown(0) && magazineSize >= 1 && !gunReloading && !isShooting && ableToShoot && !td.Dashing)
         {
             var bullet = Instantiate(BulletPrefab, FirePosition.position, FirePosition.rotation);
             bullet.GetComponent<Rigidbody>().velocity = player.Camera.forward * bulletSpeed;
             Shoot();
-            //BulletPrefab.AddForce(nukeForce, ForceMode.VelocityChange);
-            //GameObject bullet = Instantiate(BulletPrefab, FirePosition.position , Quaternion.identity);
-            //bullet.GetComponent<Rigidbody>().AddForce(transform.right * 1000);
         }
 
-        if (Input.GetKeyDown(KeyCode.R) && magazineSize <= 9 && !reloadActive && !gunReloading && !isShooting)
+        if (Input.GetKeyDown(KeyCode.R) && magazineSize <= 9 && !reloadActive && !gunReloading && !isShooting && !td.holdingShift && !td.Dashing)
         {
-            gunReload.Play("gunReload");
-            gunReloading = true;
-            Invoke("Reload", 1);
-            reloading.Play();
+            ReloadAnimation();
         }
 
-        if (Input.GetMouseButtonDown(0) && magazineSize <= 0 && !reloadActive && !gunReloading && !isShooting)
+        if (Input.GetMouseButtonDown(0) && magazineSize <= 0 && !reloadActive && !gunReloading && !isShooting && !td.holdingShift && !td.Dashing)
         {
-            gunReload.Play("gunReload");
-            reloadActive = true;
-            reloading.Play();
-            Invoke("Reload", 1);
+            ReloadAnimation();
         }
+    }
+
+    public void ReloadAnimation()
+    {
+        gunReload.Play("gunReload");
+        gunReloading = true;
+        reloadActive = true;
+        reloading.Play();
+        Invoke("Reload", 1);
     }
 
     public void Shoot()
     {
+        gunShot.Play();
         isShooting = true;
         magazineSize -= 1;
-        ResetShoot();
+        Invoke("ResetShoot", 0.5f);
     }
 
     public void ResetShoot()
