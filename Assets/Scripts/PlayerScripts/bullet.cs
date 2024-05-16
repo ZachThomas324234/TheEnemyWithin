@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using TMPro.EditorUtilities;
 using UnityEngine;
 
@@ -9,8 +10,10 @@ public class bullet : MonoBehaviour
     private gunScript gs;
     private PlayerMovement pm;
     private TestDash td;
+    private GroundPound gp;
     public ParticleSystem ps;
     public SpriteRenderer sr;
+    //public TextMeshProUGUI groundPoundText;
 
     void Awake()
     {
@@ -18,6 +21,7 @@ public class bullet : MonoBehaviour
         gs = FindAnyObjectByType<gunScript>();
         pm = FindAnyObjectByType<PlayerMovement>();
         td = FindAnyObjectByType<TestDash>();
+        gp = FindAnyObjectByType<GroundPound>();
     }
 
     void OnCollisionEnter(Collision collision)
@@ -32,15 +36,23 @@ public class bullet : MonoBehaviour
             onShoot OnShoot = collision.collider.GetComponent<onShoot>();
             if (OnShoot != null)
             {
-                if (OnShoot.abilityType.ToLower() == "dash" && !pm.hasDash)
+                if (OnShoot.abilityType.ToLower() == "dash" && !pm.hasDash && !pm.hasGroundPound)
                 {
                     gs.GetComponent<TestDash>().enabled = true;
                     pm.hasDash = true;
                     td.chargeDoneSFX.Play();
 
-                    var em = ps.emission;
-                    em.enabled = true;
-                    ps.Play();
+                    ParticleSystem part = OnShoot.GetComponentInChildren<ParticleSystem>();
+                    part.Play();
+                }
+                else if (OnShoot.abilityType.ToLower() == "groundpound" && !pm.hasDash && !pm.hasGroundPound)
+                {
+                    gs.GetComponent<GroundPound>().enabled = true;
+                    pm.hasGroundPound = true;
+                    td.chargeDoneSFX.Play();
+
+                    ParticleSystem part = OnShoot.GetComponentInChildren<ParticleSystem>();
+                    part.Play();
                 }
             }
             Destroy(gameObject);

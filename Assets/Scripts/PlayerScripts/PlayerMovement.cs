@@ -24,6 +24,11 @@ public class PlayerMovement : MonoBehaviour
     public gunScript gs;
 
     public bool hasDash = false;
+    public bool hasRadioactiveNuke = false;
+    public bool hasLightningStrike = false;
+    public bool hasTeleport = false;
+    public bool hasGroundPound = false;
+
     public bool crouching;
     public bool isRunning;
     public bool cantRun;

@@ -28,6 +28,7 @@ public class gunScript : MonoBehaviour
     public AudioSource reloading;
     public AudioSource gunShot;
     public Animator gunReload, gunPutAway, gunBringBack;
+    
     #endregion
 
     void Awake()

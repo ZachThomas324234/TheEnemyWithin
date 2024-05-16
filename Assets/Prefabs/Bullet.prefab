@@ -147,3 +147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   life: 3
+  ps: {fileID: 0}
+  sr: {fileID: 0}
+  dashText: {fileID: 6265519987045789807, guid: 13c4e03aec4495f47a728353d912fca5,
+    type: 3}
