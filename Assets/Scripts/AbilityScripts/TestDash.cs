@@ -14,7 +14,6 @@ public class TestDash : MonoBehaviour
     public bool chargeDone = false;
     public bool Dashing;
     public bool enemyInCircle;
-    public bool oneTime = true;
 
     [Header("Properties")]
     [Range(0, 1.5f)]public float DashCharge;
@@ -28,7 +27,6 @@ public class TestDash : MonoBehaviour
     private Volume volume;
     private Vignette vignette;
     private LensDistortion lensDistortion;
-    public GameObject dashText;
 
     [Header("Audio")]
     public AudioSource chargeDashFire;
@@ -46,7 +44,6 @@ public class TestDash : MonoBehaviour
 
     void Awake()
     {
-      dashText.SetActive(false);
       playerMovement = GetComponent<PlayerMovement>();
       rb = GetComponent<Rigidbody>();
       volume = FindAnyObjectByType<Volume>();
@@ -75,20 +72,6 @@ public class TestDash : MonoBehaviour
 
         vignette.intensity.value = Mathf.SmoothDamp(vignette.intensity.value, targetVignette, ref blendVignette, 0.5f);
         lensDistortion.intensity.value = Mathf.SmoothDamp(lensDistortion.intensity.value, targetLensDistortion, ref blendLensDistortion, 0.5f);
-
-        if (playerMovement.hasDash && oneTime == true)
-        {
-          Debug.Log("Done");
-          dashText.SetActive(true);
-          Invoke("DestroyText", 1);
-        }
-    }
-
-    void DestroyText()
-    {
-      Debug.Log("hello zach");
-      dashText.SetActive(false);
-      oneTime = false;
     }
 
     public void OnCtrl(InputAction.CallbackContext context)

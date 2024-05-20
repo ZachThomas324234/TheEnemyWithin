@@ -13,6 +13,7 @@ public class GroundPound : MonoBehaviour
     private PlayerMovement playerMovement;
     private Rigidbody rb;
     private TestDash td;
+    public GameObject groundPoundText;
 
     [Header("Properties")]
     [Range(0, 1.5f)]public float groundPoundCharge;
@@ -22,9 +23,10 @@ public class GroundPound : MonoBehaviour
 
     void Awake()
     {
-        td = FindAnyObjectByType<TestDash>();
-        playerMovement = GetComponent<PlayerMovement>();
-        rb = GetComponent<Rigidbody>();
+      groundPoundText.SetActive(false);
+      td = FindAnyObjectByType<TestDash>();
+      playerMovement = GetComponent<PlayerMovement>();
+      rb = GetComponent<Rigidbody>();
     }
 
     void Update()

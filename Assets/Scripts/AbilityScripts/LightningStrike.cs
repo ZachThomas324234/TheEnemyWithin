@@ -2,15 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class onShoot : MonoBehaviour
+public class LightningStrike : MonoBehaviour
 {
-    public string abilityType;
-    public GameObject text;
-    //public GameObject nukeText;
-    //public GameObject lightingText;
-    //public GameObject teleText;
-    //public GameObject groundPoundText;
-
     // Start is called before the first frame update
     void Start()
     {

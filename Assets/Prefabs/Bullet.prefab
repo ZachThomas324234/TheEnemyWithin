@@ -147,7 +147,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   life: 3
+  testDashOneTime: 0
   ps: {fileID: 0}
   sr: {fileID: 0}
-  dashText: {fileID: 6265519987045789807, guid: 13c4e03aec4495f47a728353d912fca5,
+  dashText: {fileID: 3476301013407053452, guid: c63ee0650034e954eb5dc7d2dbbc845a,
     type: 3}
+  nukeText: {fileID: 1367775776167354788, guid: 5e33547618041374d89d2af2e17936b9,
+    type: 3}
+  lightingText: {fileID: 0}
+  teleText: {fileID: 0}
+  groundPoundText: {fileID: 0}
