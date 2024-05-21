@@ -7,10 +7,7 @@ using System;
 
 public class gunScript : MonoBehaviour
 {
-
-    //time inbetween shots
     //holding shoot
-    //press left click with no bullets reloads
     #region variables
     public float bulletSpeed;
     

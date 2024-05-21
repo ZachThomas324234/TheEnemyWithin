@@ -117,20 +117,11 @@ public class TestDash : MonoBehaviour
 
         playerMovement.Movement = playerMovement.CamF;
         playerMovement.rb.AddForce(playerMovement.Movement * dashForce, ForceMode.VelocityChange);
-        
-        //if(playerMovement.MovementX == 0 && playerMovement.MovementY == 0 )
-        //playerMovement.Movement = playerMovement.CamF;
-        //playerMovement.rb.AddForce(playerMovement.Movement * dashForce, ForceMode.VelocityChange);
 
         //friction stop
         GetComponent<Collider>().material.dynamicFriction = 0;
         GetComponent<Collider>().material.staticFriction = 0;
         playerMovement.MaxSpeed = 30;
-        
-        //on collision enter stop
-        //no charge when cooldown + cant charge if already holding shift = fix this!
-        //create circle radius to show AoE around player
-        //enemies = hit, effect on them show they are hit + they bounce
     }
 
     public virtual void OnCollisionEnter (Collision collision)
