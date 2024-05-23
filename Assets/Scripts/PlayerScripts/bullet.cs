@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -125,7 +124,6 @@ public class bullet : MonoBehaviour
                 }
                 else if (OnShoot.abilityType.ToLower() == "exitscene" && bossDead)
                 {
-                    UnityEditor.EditorApplication.isPlaying = false;
                     Application.Quit();
                 }
             }
