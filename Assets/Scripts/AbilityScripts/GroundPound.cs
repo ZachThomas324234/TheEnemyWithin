@@ -13,6 +13,7 @@ public class GroundPound : MonoBehaviour
     private PlayerMovement playerMovement;
     private Rigidbody rb;
     private TestDash td;
+    private PostProcessingManager ppm;
     public GameObject groundPoundText;
 
     [Header("Properties")]
@@ -27,6 +28,7 @@ public class GroundPound : MonoBehaviour
       td = FindAnyObjectByType<TestDash>();
       playerMovement = GetComponent<PlayerMovement>();
       rb = GetComponent<Rigidbody>();
+      ppm = FindAnyObjectByType<PostProcessingManager>();
     }
 
     void Update()
@@ -61,15 +63,16 @@ public class GroundPound : MonoBehaviour
       {
         Debug.Log("g");
         holdingCtrl = true;
+
+        ppm.targetVignette = 0.2f;
+        ppm.targetLensDistortion = -0.7f;
       }
       else if(context.canceled && playerMovement.hasGroundPound)
       {
         holdingCtrl = false;
 
-        //if(!jumping)
-        //global volume
-        //targetVignette = 0;
-        //targetLensDistortion = 0;
+        ppm.targetVignette = 0;
+        ppm.targetLensDistortion = 0;
 
         if (groundPoundCharge >= 1.5f)
         {
@@ -82,7 +85,8 @@ public class GroundPound : MonoBehaviour
 
     public void JumpingHigh()
     {
-        Debug.Log("Jump");
+        ppm.targetVignette = 0;
+        ppm.targetLensDistortion = 0;
         jumping = true;
 
         playerMovement.Movement = playerMovement.CamF;

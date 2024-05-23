@@ -125,7 +125,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Crouch(InputAction.CallbackContext context)
     {
-        if (context.started && !td.Dashing && td.DashCooldown <= 0)
+        if (context.started)
         {
             gs.ableToShoot = false;
             gs.gunPutAway.Play("gunPutAway");
@@ -134,7 +134,7 @@ public class PlayerMovement : MonoBehaviour
             Speed = 20;
         }
 
-        if (context.canceled && !td.Dashing && td.DashCooldown <= 0)
+        if (context.canceled)
         {
             gs.ableToShoot = true;
             gs.gunBringBack.Play("gunBringBack");

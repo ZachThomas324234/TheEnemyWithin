@@ -22,11 +22,9 @@ public class TestDash : MonoBehaviour
 
     [Header("References")]
     private PlayerMovement playerMovement;
+    private PostProcessingManager ppm;
     public gunScript gs;
     private Rigidbody rb;
-    private Volume volume;
-    private Vignette vignette;
-    private LensDistortion lensDistortion;
 
     [Header("Audio")]
     public AudioSource chargeDashFire;
@@ -37,20 +35,11 @@ public class TestDash : MonoBehaviour
     public AudioSource chargeDoneSFX;
     public AudioSource dashWind;
 
-    private float targetLensDistortion;
-    private float blendLensDistortion;
-    private float targetVignette;
-    private float blendVignette;
-
     void Awake()
     {
       playerMovement = GetComponent<PlayerMovement>();
       rb = GetComponent<Rigidbody>();
-      volume = FindAnyObjectByType<Volume>();
-      volume.profile.TryGet (out Vignette v);
-      vignette = v;
-      volume.profile.TryGet (out LensDistortion lD);
-      lensDistortion = lD;
+      ppm = FindAnyObjectByType<PostProcessingManager>();
     }
 
 
@@ -69,9 +58,6 @@ public class TestDash : MonoBehaviour
 
         if(DashCooldown > 0) DashCooldown -= Time.deltaTime;
         if (DashCooldown < 0) DashCooldown = 0;
-
-        vignette.intensity.value = Mathf.SmoothDamp(vignette.intensity.value, targetVignette, ref blendVignette, 0.5f);
-        lensDistortion.intensity.value = Mathf.SmoothDamp(lensDistortion.intensity.value, targetLensDistortion, ref blendLensDistortion, 0.5f);
     }
 
     public void OnCtrl(InputAction.CallbackContext context)
@@ -84,8 +70,8 @@ public class TestDash : MonoBehaviour
         chargePowerUp.Play();
         powerDown.Stop();
         //global volume
-        targetVignette = 0.2f;
-        targetLensDistortion = -0.7f;
+        ppm.targetVignette = 0.2f;
+        ppm.targetLensDistortion = -0.7f;
       }
       else if(context.canceled && playerMovement.hasDash)
       {
@@ -95,8 +81,8 @@ public class TestDash : MonoBehaviour
         chargePowerUp.Stop();
         if(!Dashing)powerDown.Play();
         //global volume
-        targetVignette = 0;
-        targetLensDistortion = 0;
+        ppm.targetVignette = 0;
+        ppm.targetLensDistortion = 0;
 
         if (DashCharge >= 1.5f)
         {
@@ -112,8 +98,8 @@ public class TestDash : MonoBehaviour
         Dashing = true;
         startCharge.Play();
         dashWind.Play();
-        targetVignette = 0;
-        targetLensDistortion = 0;
+        ppm.targetVignette = 0;
+        ppm.targetLensDistortion = 0;
 
         playerMovement.Movement = playerMovement.CamF;
         playerMovement.rb.AddForce(playerMovement.Movement * dashForce, ForceMode.VelocityChange);

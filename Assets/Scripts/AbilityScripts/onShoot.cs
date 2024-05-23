@@ -6,6 +6,7 @@ public class onShoot : MonoBehaviour
 {
     public string abilityType;
     public GameObject text;
+    public Color color;
     //public GameObject nukeText;
     //public GameObject lightingText;
     //public GameObject teleText;
