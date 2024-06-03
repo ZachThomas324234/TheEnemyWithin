@@ -5900,7 +5900,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityType: nuke
   text: {fileID: 2045450087}
-  color: {r: 0, g: 0, b: 0, a: 0}
+  color: {r: 1, g: 0.096498296, b: 0, a: 0}
 --- !u!1 &129613851
 GameObject:
   m_ObjectHideFlags: 0
@@ -6023,7 +6023,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityType: lightning
   text: {fileID: 1403148084}
-  color: {r: 0, g: 0, b: 0, a: 0}
+  color: {r: 1, g: 0.790459, b: 0, a: 0}
 --- !u!1 &153099546
 GameObject:
   m_ObjectHideFlags: 0
@@ -19311,7 +19311,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityType: teleport
   text: {fileID: 1171430889}
-  color: {r: 0, g: 0, b: 0, a: 0}
+  color: {r: 1, g: 0, b: 0.6919856, a: 0}
 --- !u!1 &901240904
 GameObject:
   m_ObjectHideFlags: 0
@@ -22065,6 +22065,54 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 500ddb07-db6f-4227-bd69-c458cfb6e780
     m_ActionName: Player map/New action
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1396163072}
+        m_TargetAssemblyTypeName: RadioActiveNuke, Assembly-CSharp
+        m_MethodName: OnCtrl
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 8d275af3-9de5-4441-a3f0-a2e1df92f37d
+    m_ActionName: Player map/RadioactiveNuke[/Keyboard/leftCtrl]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1396163071}
+        m_TargetAssemblyTypeName: LightningStrike, Assembly-CSharp
+        m_MethodName: OnCtrl
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: b6ac6424-6f63-4613-83fe-77bb89a9f47c
+    m_ActionName: Player map/LightningStrike[/Keyboard/leftCtrl]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1396163070}
+        m_TargetAssemblyTypeName: Teleportation, Assembly-CSharp
+        m_MethodName: OnCtrl
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 457ea629-c14d-4f54-ae6d-c911e9930343
+    m_ActionName: Player map/Teleportation[/Keyboard/leftCtrl]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player map
@@ -22100,7 +22148,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1396163055}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 960a7982ba293cb4ea0c1fcc733013ea, type: 3}
   m_Name: 
@@ -22204,11 +22252,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1396163055}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 200d6006a2d6dbd409145bf8d902cd78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  holdingCtrl: 0
+  teleDone: 0
+  teleCharge: 0
+  teleCooldown: 0
 --- !u!114 &1396163071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22216,11 +22268,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1396163055}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f07b6e363ca082f4fa783124123574e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  holdingCtrl: 0
+  lightningDone: 0
+  lightningCharge: 0
+  lightningCooldown: 0
 --- !u!114 &1396163072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22228,11 +22284,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1396163055}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 84272c982b795094191d1526338aaed7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  holdingCtrl: 0
+  nukeDone: 0
+  nukeCharge: 0
+  nukeCooldown: 0
 --- !u!1 &1403148084 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1367775776167354788, guid: 5e33547618041374d89d2af2e17936b9,

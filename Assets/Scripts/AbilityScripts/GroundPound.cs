@@ -100,19 +100,23 @@ public class GroundPound : MonoBehaviour
         jumping = false;
         groundPoundDone = false;
         height = 0;
+        
+        Invoke("groundFloor", 0.2f);
     }
 
-    //public virtual void OnCollisionEnter (Collision collision)
-    //{
-    //  
-    //  if (jumping)
-    //  {
-    //    if(collision.contacts[0].normal.y > 0.85f)
-    //    {
-    //        ResetGroundPound();
-    //        Debug.Log("haloo");
-    //    }
-    //  }
-    //}
+    private void groundFloor()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position - playerMovement.CamF * 2, 4);
+        DebugPlus.DrawWireSphere(transform.position - playerMovement.CamF * 2, 4).Duration(1);
 
+        foreach(Collider collider in colliders)
+        { 
+          Enemy enemy = collider.gameObject.GetComponentInParent<Enemy>();
+          if (enemy != null)
+          {
+            enemy.GetComponent<Rigidbody>().AddForce((enemy.transform.position - playerMovement.transform.position).normalized * 0.1f + Vector3.up * 0.2f, ForceMode.VelocityChange);
+            enemy.TakeDamage(60);
+          }
+      }
+    }
 }

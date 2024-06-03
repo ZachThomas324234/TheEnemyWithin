@@ -51,9 +51,7 @@ public class bullet : MonoBehaviour
                 if (OnShoot.abilityType.ToLower() == "dash" && !pm.hasDash)
                 {
                     DisableAllAbilities();
-
-                    ppm.targetVignette = 0;
-                    ppm.targetLensDistortion = 0;
+                    
                     ppm.vignette.color.value = OnShoot.color;
 
                     //Dash True
@@ -69,6 +67,8 @@ public class bullet : MonoBehaviour
                 {
                     DisableAllAbilities();
 
+                    ppm.vignette.color.value = OnShoot.color;
+
                     gs.GetComponent<RadioActiveNuke>().enabled = true;
                     pm.hasRadioactiveNuke = true;
                     OnShoot.text.SetActive(true);
@@ -82,6 +82,8 @@ public class bullet : MonoBehaviour
                 {
                     DisableAllAbilities();
 
+                    ppm.vignette.color.value = OnShoot.color;
+
                     gs.GetComponent<LightningStrike>().enabled = true;
                     pm.hasLightningStrike = true;
                     OnShoot.text.SetActive(true);
@@ -94,6 +96,8 @@ public class bullet : MonoBehaviour
                 else if (OnShoot.abilityType.ToLower() == "teleport" && !pm.hasTeleport)
                 {
                     DisableAllAbilities();
+
+                    ppm.vignette.color.value = OnShoot.color;   
 
                     gs.GetComponent<Teleportation>().enabled = true;
                     pm.hasTeleport = true;
@@ -109,8 +113,6 @@ public class bullet : MonoBehaviour
                     //Ground Pound True
                     DisableAllAbilities();
 
-                    ppm.targetVignette = 0;
-                    ppm.targetLensDistortion = 0;
                     ppm.vignette.color.value = OnShoot.color;
 
                     gs.GetComponent<GroundPound>().enabled = true;
@@ -133,6 +135,9 @@ public class bullet : MonoBehaviour
 
     public void DisableAllAbilities()
     {
+        ppm.targetLensDistortion = 0;
+        ppm.targetVignette = 0;
+
         gs.GetComponent<TestDash>().enabled = false;
         pm.hasDash = false;
 
