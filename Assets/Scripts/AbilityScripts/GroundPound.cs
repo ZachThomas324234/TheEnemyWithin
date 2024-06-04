@@ -107,7 +107,7 @@ public class GroundPound : MonoBehaviour
     private void groundFloor()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position - playerMovement.CamF * 2, 4);
-        DebugPlus.DrawWireSphere(transform.position - playerMovement.CamF * 2, 4).Duration(1);
+        DebugPlus.DrawWireSphere(transform.position - playerMovement.CamF * 0, 6).Duration(1);
 
         foreach(Collider collider in colliders)
         { 

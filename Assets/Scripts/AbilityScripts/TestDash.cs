@@ -25,6 +25,8 @@ public class TestDash : MonoBehaviour
     private PostProcessingManager ppm;
     public gunScript gs;
     private Rigidbody rb;
+    private PStypes abilityPStypes;
+    public GameObject dashFX;
 
     [Header("Audio")]
     public AudioSource chargeDashFire;
@@ -40,6 +42,7 @@ public class TestDash : MonoBehaviour
       playerMovement = GetComponent<PlayerMovement>();
       rb = GetComponent<Rigidbody>();
       ppm = FindAnyObjectByType<PostProcessingManager>();
+      abilityPStypes = FindAnyObjectByType<PStypes>();
     }
 
 
@@ -135,6 +138,8 @@ public class TestDash : MonoBehaviour
 
       Collider[] colliders = Physics.OverlapSphere(transform.position - playerMovement.CamF * 2, 4);
       DebugPlus.DrawWireSphere(transform.position - playerMovement.CamF * 2, 4).Duration(1);
+
+      GameObject particle = Instantiate(dashFX, transform.position, Quaternion.identity);
 
       foreach(Collider collider in colliders)
       { 
