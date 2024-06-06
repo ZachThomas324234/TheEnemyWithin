@@ -6,14 +6,21 @@ using UnityEngine.InputSystem;
 
 public class RadioActiveNuke : MonoBehaviour
 {
+
+    public bool holdingCtrl, pressRClick = false, nukeDone = false;
+
+    [Header("References")]
+    public GameObject NukePrefab;
+    public Transform FirePosition;
     private PostProcessingManager ppm;
     private PlayerMovement playerMovement;
-
-    public bool holdingCtrl, nukeDone = false;
+    public GameObject nukeGrow, dashFX;
+    public Camera camera;
 
     [Header("Properties")]
     [Range(0, 1.5f)]public float nukeCharge;
     [Range(0, 1.5f)]public float nukeCooldown;
+    public float nukeSpeed;
 
     // Start is called before the first frame update
     void Awake()
@@ -22,11 +29,11 @@ public class RadioActiveNuke : MonoBehaviour
         playerMovement = FindAnyObjectByType<PlayerMovement>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if(holdingCtrl && nukeCooldown == 0)nukeCharge += Time.deltaTime;
-        else nukeCharge -= Time.deltaTime;
+      if(pressRClick && nukeCooldown == 0)nukeCharge += Time.deltaTime;
+      else nukeCharge -= Time.deltaTime;
+        //if(holdingCtrl && nukeCooldown == 0)nukeCharge += Time.deltaTime;
         
         nukeCharge = Math.Clamp (nukeCharge, 0, 1.5f);
 
@@ -40,15 +47,20 @@ public class RadioActiveNuke : MonoBehaviour
         if (nukeCooldown < 0) nukeCooldown = 0;
     }
 
-    public void OnCtrl(InputAction.CallbackContext context)
+    public void OnRClick(InputAction.CallbackContext context)
     {
       if(context.started && nukeCooldown <= 0 && playerMovement.hasRadioactiveNuke)
       {
-        holdingCtrl = true;
+        pressRClick = true;
+        //holdingCtrl = true;
         //audio
         //chargeDashFire.Play();
         //chargePowerUp.Play();
         //powerDown.Stop();
+        nukeGrow = Instantiate(NukePrefab, FirePosition.position, FirePosition.rotation, playerMovement.Camera);
+        Animator nukeAnim = nukeGrow.GetComponent<Animator>();
+        nukeAnim.Play("nukeGrow");
+        GameObject particle = Instantiate(dashFX, transform.position, Quaternion.identity, playerMovement.Camera);
         
         //global volume
         ppm.targetVignette = 0.2f;
@@ -56,7 +68,11 @@ public class RadioActiveNuke : MonoBehaviour
       }
       else if(context.canceled && playerMovement.hasRadioactiveNuke)
       {
-        holdingCtrl = false;
+        pressRClick = false;
+
+        Destroy(nukeGrow);
+        //Destroy(particle);
+        //holdingCtrl = false;
         //audio
         //chargeDashFire.Stop();
         //chargePowerUp.Stop();
@@ -76,15 +92,5 @@ public class RadioActiveNuke : MonoBehaviour
 
     public void nuke()
     {
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            ppm.targetVignette = 0.2f;
-            ppm.targetLensDistortion = -0.7f;
-        }
-        else
-        {
-            ppm.targetVignette = 0;
-            ppm.targetLensDistortion = 0;
-        }
     }
 }

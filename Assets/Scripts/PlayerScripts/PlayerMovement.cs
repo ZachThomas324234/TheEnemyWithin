@@ -18,12 +18,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("References")]
     public Rigidbody rb;
     public Transform Camera;
-
-    //public GameObject dashText;
-    //public GameObject nukeText;
-    //public GameObject lightingText;
-    //public GameObject teleText;
-    //public GameObject groundPoundText;
+    public Animator armsPutAway, armsAppear;
 
     public TestDash td;
     public gunScript gs;
@@ -40,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
     public bool crouching;
     public bool isRunning;
     public bool cantRun;
+    public bool HoldingRClick;
 
 
     void Awake()
@@ -50,12 +46,6 @@ public class PlayerMovement : MonoBehaviour
         gs = GetComponent<gunScript>();
         bullet = GetComponent<bullet>();
         staminaAmount = 2;
-
-        //dashText.SetActive(false);
-        //nukeText.SetActive(false);
-        //lightingText.SetActive(false);
-        //teleText.SetActive(false);
-        //groundPoundText.SetActive(false);
     }
 
     void FixedUpdate()
@@ -74,6 +64,26 @@ public class PlayerMovement : MonoBehaviour
         rb.AddForce(rb.velocity * -6f);
 
         LockToMaxSpeed();
+    }
+
+    public void OnRClick(InputAction.CallbackContext RClick)
+    {
+        //if(RClick.started)  HoldingRClick = true;
+        //if(RClick.canceled) HoldingRClick = false;
+        if (RClick.started && hasRadioactiveNuke && !jumping && !td.Dashing && !crouching && grounded)
+        {
+            gs.ableToShoot = false;
+            gs.gunPutAway.Play("gunPutAway");
+            armsAppear.Play("armsAppear");
+        }
+
+        if (RClick.canceled && hasRadioactiveNuke && !td.Dashing && !crouching)
+        {
+            gs.ableToShoot = true;
+            jumping = false;
+            gs.gunBringBack.Play("gunBringBack");
+            armsPutAway.Play("armsPutAway");
+        }
     }
 
     public void onMove(InputAction.CallbackContext MovementValue)
